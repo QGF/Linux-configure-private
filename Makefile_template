@@ -23,7 +23,7 @@ $(Target):$(CXX_OBJS) $(C_OBJS)
 	$(COMPILE) -o $@ $<
 
 
--include depend.mk
+-include depend.mk#这里的mk文件为自动生成的obj文件依赖的信息
 
 depend.mk: $(CXX_SRCS) $(C_SRCS) 
 	@set -e; rm -f $@;
