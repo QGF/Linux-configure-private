@@ -1,0 +1,37 @@
+Target       = test#在这里设置生成的目标可执行文件
+COMPILE      = $(CXX)#这里是决定使用gcc编译还是g++编译
+CXX          = g++
+CXX_SRCS_DIR =#这里指定cpp文件的路径,如果不指定，默认为当前文件夹
+CXX_SRCS     = $(foreach dir,$(CXX_SRCS_DIR),$(wildcard $(dir)/*.cpp)) $(wildcard *.cpp)#这个函数含义是把文件夹下所有文件包含进来
+CXX_OBJS     = $(CXX_SRCS:.cpp=.o)#源代码文件转化为object文件
+CC           = gcc
+C_SRCS_DIR   =#这里指定.c文件的路径，如果不指定，默认为当前文件夹 
+C_SRCS       = $(foreach dir,$(C_SRCS_DIR),$(wildcard $(dir)/*.c)) $(wildcard *.c)  
+C_OBJS       = $(C_SRCS:.c=.o)
+HEADER_DIR   =#指定头文件夹
+
+#指定makefile自动寻找路径
+vpath %.c   $(C_SRCS_DIR)
+vpath %.cpp $(CXX_SRCS_DIR)ָ
+vpath %.h   $(HEADER_DIR)
+
+all: $(Target)   
+.PHONY: all  
+
+
+$(Target):$(CXX_OBJS) $(C_OBJS)
+	$(COMPILE) -o $@ $<
+
+
+-include depend.mk
+
+depend.mk: $(CXX_SRCS) $(C_SRCS) 
+	@set -e; rm -f $@;
+	$(COMPILE) -MM $< > depend.mk;
+
+
+.PHONY: clean
+clean:
+	-rm $(Target) $(CXX_OBJS) -f
+	-rm *.mk
+
